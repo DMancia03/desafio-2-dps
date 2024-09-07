@@ -20,30 +20,30 @@ export default function App() {
           tabBarInactiveTintColor: colors.PRYMARY_COLOR,
         }} >
         <Tab.Screen 
-          name='ingresos' 
+          name='datos' 
           component={Ingresos}
           options={{
-            title: 'Ingresos',
+            title: 'Datos financieros',
             headerStyle: {
               backgroundColor: colors.PRYMARY_COLOR,
             },
             headerTitleStyle: {
               color: colors.SECONDARY_COLOR,
             },
-            tabBarIcon: ({ color }) => <Icon  name="home" color={color} size={26} />,
+            tabBarIcon: ({ color }) => <Icon  name="piggy-bank" color={color} size={26} />,
           }} />
         <Tab.Screen 
           name='calificacion' 
           component={Calificacion}
           options={{
-            title: 'Calificación',
+            title: 'Calificación cliente',
             headerStyle: {
               backgroundColor: colors.PRYMARY_COLOR,
             },
             headerTitleStyle: {
               color: colors.SECONDARY_COLOR,
             },
-            tabBarIcon: ({ color }) => <Icon  name="home" color={color} size={26} />,
+            tabBarIcon: ({ color }) => <Icon  name="account" color={color} size={26} />,
           }} />
       </Tab.Navigator>
 

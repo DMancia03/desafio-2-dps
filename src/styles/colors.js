@@ -1,4 +1,4 @@
 export default {
-    PRYMARY_COLOR: '#00005d',
-    SECONDARY_COLOR: '#0601fe',
+    PRYMARY_COLOR: '#003459',
+    SECONDARY_COLOR: '#107acc',
 }
