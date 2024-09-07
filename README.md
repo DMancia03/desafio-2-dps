@@ -1,5 +1,6 @@
-Desafio #2 DPS<br>
+## Desafio #2 DPS
 
-Integrantes:<br>
-Angel Fernando Arevalo Beltran. AB200860<br>
-Rodrigo Alberto Beltrán Reyes. BR200730<br>
+### Integrantes:
+- Angel Fernando Arevalo Beltran. AB200860
+- Rodrigo Alberto Beltrán Reyes. BR200730
+- Diego Fernando Mancía Hernández. MH212532
