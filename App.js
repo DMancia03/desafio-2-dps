@@ -1,3 +1,4 @@
+import React, {useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from './src/styles/colors';
@@ -10,14 +11,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 export default function App() {
   const Tab = createBottomTabNavigator();
 
+  const [ingresos, setIngresos] = useState({});
+  
+
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={{
           tabBarActiveBackgroundColor: colors.PRYMARY_COLOR,
-          tabBarActiveTintColor: colors.SECONDARY_COLOR,
+          tabBarActiveTintColor: colors.WHITE,
           tabBarInactiveBackgroundColor: colors.SECONDARY_COLOR,
-          tabBarInactiveTintColor: colors.PRYMARY_COLOR,
+          tabBarInactiveTintColor: colors.WHITE,
         }} >
         <Tab.Screen 
           name='datos' 
@@ -28,7 +32,7 @@ export default function App() {
               backgroundColor: colors.PRYMARY_COLOR,
             },
             headerTitleStyle: {
-              color: colors.SECONDARY_COLOR,
+              color: colors.WHITE,
             },
             tabBarIcon: ({ color }) => <Icon  name="piggy-bank" color={color} size={26} />,
           }} />
@@ -41,7 +45,7 @@ export default function App() {
               backgroundColor: colors.PRYMARY_COLOR,
             },
             headerTitleStyle: {
-              color: colors.SECONDARY_COLOR,
+              color: colors.WHITE,
             },
             tabBarIcon: ({ color }) => <Icon  name="account" color={color} size={26} />,
           }} />
