@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import colors from './src/styles/colors';
@@ -6,13 +6,32 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ingresos from './src/screens/datos_financieros/Ingresos';
 import Calificacion from './src/screens/calificacion_cliente/Calificacion';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const Tab = createBottomTabNavigator();
 
-  const [ingresos, setIngresos] = useState({});
-  
+  //Constantes para ingresos y egresos
+  const [ingresos, setIngresos] = useState([]);
+  const [egresos, setEgresos] = useState([]);
+
+  //Ejemplo de obtener datos y guardar datos en AsyncStorage
+  useEffect(() => {
+    const getIngresos = async () => {
+      const ingresosStorage = await AsyncStorage.getItem('citas');
+      if(ingresosStorage){
+        setIngresos(JSON.parse(ingresosStorage));
+      }
+    }
+
+    getIngresos();
+  }, []);
+
+  //JSON.stringfy() para convertir a JSON
+  const saveIngresos = async (citasJSON) => {
+    await AsyncStorage.setItem('citas', citasJSON);
+  };
 
   return (
     <NavigationContainer>
