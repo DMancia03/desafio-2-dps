@@ -8,6 +8,11 @@ const Calificacion = ({ navigation }) => {
         <ScrollView style={styles.scroll_container}>
             <View style={styles.container}>
                 <View style={styles.container_header}>
+                    <Text style={styles.container_header_text}>Consolidación de deudas</Text>
+                </View>
+            </View>
+            <View style={styles.container}>
+                <View style={styles.container_header}>
                     <Text style={styles.container_header_text}>Apertura de cuenta</Text>
                 </View>
             </View>
@@ -48,7 +53,7 @@ const styles = StyleSheet.create({
     },
     card: {
         width: '100%',
-        height: 200,
+        height: 250,
         borderRadius: 10,
     },
     container_header: {
