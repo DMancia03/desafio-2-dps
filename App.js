@@ -59,7 +59,7 @@ export default function App() {
           name='calificacion' 
           component={Calificacion}
           options={{
-            title: 'Calificación cliente',
+            title: 'Productos disponibles',
             headerStyle: {
               backgroundColor: colors.PRYMARY_COLOR,
             },
