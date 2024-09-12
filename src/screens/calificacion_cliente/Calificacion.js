@@ -1,32 +1,85 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, FlatList } from 'react-native';
 import colors from "../../styles/colors";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ProductContainer from "../../components/ProductContainer";
+import CardContainer from "../../components/CardContainer";
+import productos from "../../data/productos";
+import tarjetas from "../../data/tarjetas";
 
 const Calificacion = ({ navigation }) => {
+    const ingresos = 1000;
+    const egresos = 500;
+    const libre = ingresos - egresos;
+    const disponibilidad_decimal = libre / egresos;
+    const disponibilidad_porcentaje = disponibilidad_decimal * 100;
+
+    let products = productos.riesgo_test;
+    let cards = tarjetas.riesgo_test;
+
+    if(ingresos <= egresos){
+        products = productos.riesgo_extremo;
+        cards = tarjetas.riesgo_extremo;
+    }
+    else if(ingresos <= 360){
+        products = productos.riesgo_alto;
+        cards = tarjetas.riesgo_alto;
+    }
+    else if(ingresos > 360 && ingresos <= 700){
+        products = productos.riesgo_suficiente;
+        cards = tarjetas.riesgo_suficiente;
+    }
+    else if(ingresos > 700 && ingresos <= 1200){
+        products = productos.riesgo_bueno;
+        cards = tarjetas.riesgo_bueno;
+    }
+    else if(ingresos > 1200 && ingresos <= 3000){
+        products = productos.riesgo_muy_bueno;
+        cards = tarjetas.riesgo_muy_bueno;
+    }
+    else if(ingresos > 3000){
+        products = productos.riesgo_excelente;
+        cards = tarjetas.riesgo_excelente;
+    }
+
     return(
-        <ScrollView style={styles.scroll_container}>
-            <View style={styles.container}>
-                <View style={styles.container_header}>
-                    <Text style={styles.container_header_text}>Apertura de cuenta</Text>
-                </View>
-            </View>
-            <View style={styles.container}>
-                <View style={styles.container_header}>
-                    <Text style={styles.container_header_text}>Crédito personal</Text>
-                </View>
-            </View>
-            <View style={styles.container}>
-                <View style={styles.container_header}>
-                    <Text style={styles.container_header_text}> Tarjetas disponibles</Text>
-                </View>
-                <Image source={require('../../../assets/img-cards/clasica.png')} style={styles.card} />
-                <Image source={require('../../../assets/img-cards/oro.png')} style={styles.card} />
-                <Image source={require('../../../assets/img-cards/platinum.png')} style={styles.card} />
-                <Image source={require('../../../assets/img-cards/black.png')} style={styles.card} />
-                <View style={styles.container_header}>
-                    <Text>No puedes optar por una tarjeta.</Text>
-                </View>
+        <ScrollView style={styles.scroll}>
+            <View style={styles.section}>
+                {
+                    products.length > 0 ? (
+                        <>
+                        <View style={styles.section_header}>
+                            <Text style={styles.section_title}>Productos</Text>
+                        </View>
+
+                        <FlatList
+                            data={products}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => (
+                                <ProductContainer product={item}/>
+                            )}
+                        />
+                        </>
+                    ) : null
+                }
+
+                {
+                    cards.length > 0 ? (
+                        <>
+                        <View style={styles.section_header}>
+                            <Text style={styles.section_title}>Tarjetas</Text>
+                        </View>
+
+                        <FlatList
+                            data={cards}
+                            keyExtractor={item => item.id}
+                            renderItem={({item}) => (
+                                <CardContainer card={item}/>
+                            )}
+                        />
+                    </>
+                    ) : null
+                }
             </View>
         </ScrollView>
     )
@@ -35,32 +88,46 @@ const Calificacion = ({ navigation }) => {
 export default Calificacion;
 
 const styles = StyleSheet.create({
-    scroll_container: {
+    scroll: {
+        backgroundColor: colors.GRAY_BACKGROUND,
+    },
+    section: {
         display: 'flex',
         flexDirection: 'column',
     },
     container: {
-        backgroundColor: colors.GRAY_BACKGROUND,
-        padding: 20,
         display: 'flex',
         flexDirection: 'column',
         gap: 20,
     },
     card: {
         width: '100%',
-        height: 200,
+        height: 250,
         borderRadius: 10,
     },
-    container_header: {
+    section_header: {
         backgroundColor: colors.WHITE,
         borderRadius: 10,
         padding:20,
+        margin:20,
         display: 'flex',
         flexDirection: 'row',
         alignContent: 'center',
     },
-    container_header_text: {
+    section_title: {
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    container_body: {
+        backgroundColor: colors.WHITE,
+        padding: 20,
+        borderRadius: 10,
+        display: 'flex',
+        flexDirection: 'column',
+        gap:20,
+    },
+    container_body_line: {
+        display: 'flex',
+        flexDirection: 'row',
     }
 });
