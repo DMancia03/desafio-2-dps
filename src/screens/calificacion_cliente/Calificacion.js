@@ -4,6 +4,8 @@ import colors from "../../styles/colors";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProductContainer from "../../components/ProductContainer";
 import CardContainer from "../../components/CardContainer";
+import productos from "../../data/productos";
+import tarjetas from "../../data/tarjetas";
 
 const Calificacion = ({ navigation }) => {
     const ingresos = 1000;
@@ -12,77 +14,33 @@ const Calificacion = ({ navigation }) => {
     const disponibilidad_decimal = libre / egresos;
     const disponibilidad_porcentaje = disponibilidad_decimal * 100;
 
-    const products = [
-        {
-            id: 'P001',
-            title: 'Ayuda financiera',
-            items: [{
-                id: 'P001I001',
-                icon: 'finance',
-                description: 'Financiamiento para consolidado de deudas',
-            },
-            {
-                id: 'P001I002',
-                icon: 'card-account-phone',
-                description: 'Contacto para un asesor financiero',
-            }],
-            message_no_products: {
-                icon: 'alert-circle',
-                description: 'No tienes productos aquí',
-            }
-        },
-        {
-            id: 'P002',
-            title: 'Apertura de cuenta',
-            items: [{
-                id: 'P002I001',
-                icon: 'account-cash',
-                description: 'Puedes abrir una cuenta de ahorros'
-            }],
-            message_no_products: {
-                icon: 'alert-circle',
-                description: 'No tienes productos aquí',
-            }
-        },
-        {
-            id: 'P003',
-            title: 'Crédito personal',
-            items: [{
-                id: 'P003I001',
-                icon: 'cash',
-                description: 'Crédito personal hasta $2,000.00'
-            }],
-            message_no_products: {
-                icon: 'alert-circle',
-                description: 'No tienes productos aquí',
-            }
-        }
-    ];
+    let products = productos.riesgo_test;
+    let cards = tarjetas.riesgo_test;
 
-    const cards = [{
-        id: 'C001',
-        title: 'Clásica',
-        description: 'Tarjeta de crédito clásica',
-        image: require('../../../assets/img-cards/clasica.png'),
-    },
-    {
-        id: 'C002',
-        title: 'Oro',
-        description: 'Tarjeta de crédito oro',
-        image: require('../../../assets/img-cards/oro.png'),
-    },
-    {
-        id: 'C003',
-        title: 'Platinum',
-        description: 'Tarjeta de crédito platinum',
-        image: require('../../../assets/img-cards/platinum.png'),
-    },
-    {
-        id: 'C004',
-        title: 'Black',
-        description: 'Tarjeta de crédito black',
-        image: require('../../../assets/img-cards/black.png'),
-    }];
+    if(ingresos <= egresos){
+        products = productos.riesgo_extremo;
+        cards = tarjetas.riesgo_extremo;
+    }
+    else if(ingresos <= 360){
+        products = productos.riesgo_alto;
+        cards = tarjetas.riesgo_alto;
+    }
+    else if(ingresos > 360 && ingresos <= 700){
+        products = productos.riesgo_suficiente;
+        cards = tarjetas.riesgo_suficiente;
+    }
+    else if(ingresos > 700 && ingresos <= 1200){
+        products = productos.riesgo_bueno;
+        cards = tarjetas.riesgo_bueno;
+    }
+    else if(ingresos > 1200 && ingresos <= 3000){
+        products = productos.riesgo_muy_bueno;
+        cards = tarjetas.riesgo_muy_bueno;
+    }
+    else if(ingresos > 3000){
+        products = productos.riesgo_excelente;
+        cards = tarjetas.riesgo_excelente;
+    }
 
     return(
         <ScrollView style={styles.scroll}>
