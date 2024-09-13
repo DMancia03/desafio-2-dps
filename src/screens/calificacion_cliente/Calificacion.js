@@ -10,7 +10,7 @@ import { ProgressChart } from "react-native-chart-kit";
 
 const Calificacion = ({ navigation }) => {
     const ingresos = 5000;
-    const egresos = 190;
+    const egresos = 2900;
     let libre = 0;
     let disponibilidad_decimal = 0;
     let disponibilidad_porcentaje = 0;
@@ -81,7 +81,7 @@ const Calificacion = ({ navigation }) => {
         }
         else if(ingresos > 3000){
             if(disponibilidad_porcentaje <= 20) llenarBueno();
-            else if(disponibilidad_porcentaje > 20 && disponibilidad_porcentaje <= 40) llenarMuyBueno();
+            else if(disponibilidad_porcentaje > 20 && disponibilidad_porcentaje <= 30) llenarMuyBueno();
             else llenarExcelente();
         }
     }
@@ -91,9 +91,9 @@ const Calificacion = ({ navigation }) => {
             <View style={styles.section}>
                 {
                     disponibilidad_porcentaje > 0 ? (
-                        <TitleContainer title={"Tienes una disponibiliad de " + disponibilidad_porcentaje + "%"} />
+                        <TitleContainer title={"Tienes una disponibilidad de " + disponibilidad_porcentaje.toFixed(2) + "%"} />
                     ) : (
-                        <TitleContainer title={"Tienes una disponibiliad negativa :c"} />
+                        <TitleContainer title={"Tienes una disponibilidad negativa :c"} />
                     )
                 }
                 {
