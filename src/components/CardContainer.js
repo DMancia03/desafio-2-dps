@@ -20,10 +20,11 @@ export default CardContainer;
 const styles = StyleSheet.create({
     cardContainer: {
         margin:20,
+        flex:1,
     },
     card: {
         width: '100%',
-        height: 200,
+        height: 225,
         borderRadius: 10,
     },
 });

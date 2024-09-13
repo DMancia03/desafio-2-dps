@@ -6,10 +6,11 @@ import ProductContainer from "../../components/ProductContainer";
 import CardContainer from "../../components/CardContainer";
 import productos from "../../data/productos";
 import tarjetas from "../../data/tarjetas";
+import TitleContainer from "../../components/TitleContainer";
 
 const Calificacion = ({ navigation }) => {
-    const ingresos = 1000;
-    const egresos = 500;
+    const ingresos = 5000;
+    const egresos = 1000;
     const libre = ingresos - egresos;
     const disponibilidad_decimal = libre / egresos;
     const disponibilidad_porcentaje = disponibilidad_decimal * 100;
@@ -17,7 +18,11 @@ const Calificacion = ({ navigation }) => {
     let products = productos.riesgo_test;
     let cards = tarjetas.riesgo_test;
 
-    if(ingresos <= egresos){
+    if(ingresos <= 0 && egresos <= 0){
+        products = productos.riesgo_default;
+        cards = tarjetas.riesgo_default;
+    }
+    else if(ingresos <= egresos){
         products = productos.riesgo_extremo;
         cards = tarjetas.riesgo_extremo;
     }
@@ -48,9 +53,7 @@ const Calificacion = ({ navigation }) => {
                 {
                     products.length > 0 ? (
                         <>
-                        <View style={styles.section_header}>
-                            <Text style={styles.section_title}>Productos</Text>
-                        </View>
+                        <TitleContainer title={"Productos"} />
 
                         <FlatList
                             data={products}
@@ -66,9 +69,7 @@ const Calificacion = ({ navigation }) => {
                 {
                     cards.length > 0 ? (
                         <>
-                        <View style={styles.section_header}>
-                            <Text style={styles.section_title}>Tarjetas</Text>
-                        </View>
+                        <TitleContainer title={"Tarjetas"} />
 
                         <FlatList
                             data={cards}

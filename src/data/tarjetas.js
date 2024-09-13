@@ -23,6 +23,7 @@ export default {
         description: 'Tarjeta de crédito black',
         image: require('../../assets/img-cards/black.png'),
     }],
+    riesgo_default: [],
     riesgo_extremo: [],
     riesgo_alto: [],
     riesgo_suficiente: [{

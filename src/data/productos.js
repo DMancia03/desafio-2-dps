@@ -45,6 +45,18 @@ export default {
             }
         }
     ],
+    riesgo_default: [
+        {
+            id: 'P000',
+            title: 'No tienes productos',
+            items: [{
+                id: 'P000I001',
+                icon: 'alert-circle',
+                description: 'No has ingresado tus ingresos y egresos',
+            }],
+            message_no_products: { }
+        }
+    ],
     riesgo_extremo: [
         {
             id: 'P001',
