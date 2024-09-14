@@ -1,86 +1,139 @@
-import React from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TextInput, Button, Modal, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../styles/colors";
 
-// Validación con Yup
+// Validación con Yup para los campos de egresos
 const validationSchema = Yup.object({
     alquiler: Yup.string().required('Campo obligatorio'),
     canastaBasica: Yup.string().required('Campo obligatorio'),
-    financiamiento: Yup.string().required('Campo obligatorio'),
+    financiaciones: Yup.string().required('Campo obligatorio'),
     transporte: Yup.string().required('Campo obligatorio'),
-    servicios: Yup.string().required('Campo obligatorio'),
-    salud: Yup.string().required('Campo obligatorio'),
-    varios: Yup.string().required('Campo obligatorio')
+    serviciosPublicos: Yup.string().required('Campo obligatorio'),
+    saludSeguro: Yup.string().required('Campo obligatorio'),
+    egresosVarios: Yup.string().required('Campo obligatorio')
 });
 
 const Egresos = ({ navigation }) => {
-    const guardarEgresos = async (values) => {
+    const [modalVisible, setModalVisible] = useState(false);  // Estado para el modal
+
+    const guardarEgresos = async (values, resetForm) => {
         try {
-          await AsyncStorage.setItem('egresos', JSON.stringify(values));
-          Alert.alert('Guardado', 'Los egresos han sido guardados exitosamente.');
+            // Guardar los valores de egresos en AsyncStorage
+            await AsyncStorage.setItem('egresos', JSON.stringify(values));
+            // Mostrar modal de éxito
+            setModalVisible(true);
+            // Limpiar el formulario
+            resetForm();
         } catch (error) {
-          console.error('Error al guardar los egresos:', error);
+            console.error('Error al guardar los egresos:', error);
         }
     };
 
     return (
         <Formik
-          initialValues={{
-            alquiler: '',
-            canastaBasica: '',
-            financiamiento: '',
-            transporte: '',
-            servicios: '',
-            salud: '',
-            varios: ''
-          }}
-          validationSchema={validationSchema}
-          onSubmit={(values) => {
-            guardarEgresos(values);
-          }}
+            initialValues={{
+                alquiler: '',
+                canastaBasica: '',
+                financiaciones: '',
+                transporte: '',
+                serviciosPublicos: '',
+                saludSeguro: '',
+                egresosVarios: ''
+            }}
+            validationSchema={validationSchema}
+            onSubmit={(values, { resetForm }) => guardarEgresos(values, resetForm)} // Guardar datos y limpiar formulario
         >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-            <KeyboardAvoidingView 
-              style={{ flex: 1 }} 
-              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            >
-              <ScrollView contentContainerStyle={styles.scrollContainer}>
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <View style={styles.container}>
-                  <Text style={styles.title}>Egresos Mensuales</Text>
-
-                  {/* Campos del formulario */}
-                  {["Alquiler/Hipoteca", "Canasta Básica", "Financiamientos", "Transporte", "Servicios Públicos", "Salud y Seguro", "Egresos Varios"].map((label, index) => (
-                    <View key={index} style={styles.inputContainer}>
-                      <Text style={styles.label}>{label}</Text>
-                      <TextInput
+                    <TextInput
                         style={styles.input}
-                        placeholder={label}
-                        onChangeText={handleChange(label.toLowerCase().replace(/\s+/g, ''))}
-                        onBlur={handleBlur(label.toLowerCase().replace(/\s+/g, ''))}
-                        value={values[label.toLowerCase().replace(/\s+/g, '')]}
-                      />
-                      {touched[label.toLowerCase().replace(/\s+/g, '')] && errors[label.toLowerCase().replace(/\s+/g, '')] && 
-                        <Text style={styles.errorText}>{errors[label.toLowerCase().replace(/\s+/g, '')]}</Text>
-                      }
-                    </View>
-                  ))}
+                        placeholder="Alquiler / Hipoteca"
+                        onChangeText={handleChange('alquiler')}
+                        onBlur={handleBlur('alquiler')}
+                        value={values.alquiler}
+                    />
+                    {touched.alquiler && errors.alquiler && <Text style={styles.errorText}>{errors.alquiler}</Text>}
 
-                  {/* Botón de guardar */}
-                  <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Guardar Egresos</Text>
-                  </TouchableOpacity>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Canasta Básica"
+                        onChangeText={handleChange('canastaBasica')}
+                        onBlur={handleBlur('canastaBasica')}
+                        value={values.canastaBasica}
+                    />
+                    {touched.canastaBasica && errors.canastaBasica && <Text style={styles.errorText}>{errors.canastaBasica}</Text>}
 
-                  {/* Botón para regresar a la pantalla de Ingresos */}
-                  <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Ingresos')}>
-                    <Text style={styles.buttonText}>Regresar a Ingresos</Text>
-                  </TouchableOpacity>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Financiamientos (Préstamos fuera de hipoteca)"
+                        onChangeText={handleChange('financiaciones')}
+                        onBlur={handleBlur('financiaciones')}
+                        value={values.financiaciones}
+                    />
+                    {touched.financiaciones && errors.financiaciones && <Text style={styles.errorText}>{errors.financiaciones}</Text>}
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Transporte"
+                        onChangeText={handleChange('transporte')}
+                        onBlur={handleBlur('transporte')}
+                        value={values.transporte}
+                    />
+                    {touched.transporte && errors.transporte && <Text style={styles.errorText}>{errors.transporte}</Text>}
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Servicios Públicos"
+                        onChangeText={handleChange('serviciosPublicos')}
+                        onBlur={handleBlur('serviciosPublicos')}
+                        value={values.serviciosPublicos}
+                    />
+                    {touched.serviciosPublicos && errors.serviciosPublicos && <Text style={styles.errorText}>{errors.serviciosPublicos}</Text>}
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Salud y Seguro"
+                        onChangeText={handleChange('saludSeguro')}
+                        onBlur={handleBlur('saludSeguro')}
+                        value={values.saludSeguro}
+                    />
+                    {touched.saludSeguro && errors.saludSeguro && <Text style={styles.errorText}>{errors.saludSeguro}</Text>}
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Egresos Varios"
+                        onChangeText={handleChange('egresosVarios')}
+                        onBlur={handleBlur('egresosVarios')}
+                        value={values.egresosVarios}
+                    />
+                    {touched.egresosVarios && errors.egresosVarios && <Text style={styles.errorText}>{errors.egresosVarios}</Text>}
+
+                    <Button onPress={handleSubmit} title="Guardar Egresos" color={colors.PRYMARY_COLOR} />
+
+                    {/* Modal para confirmar guardado */}
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => setModalVisible(false)}
+                    >
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                <Text style={styles.modalText}>Egresos guardados exitosamente.</Text>
+                                <TouchableOpacity
+                                    style={styles.closeButton}
+                                    onPress={() => setModalVisible(false)}
+                                >
+                                    <Text style={styles.closeButtonText}>Cerrar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
                 </View>
-              </ScrollView>
-            </KeyboardAvoidingView>
-          )}
+            )}
         </Formik>
     );
 };
@@ -88,74 +141,47 @@ const Egresos = ({ navigation }) => {
 export default Egresos;
 
 const styles = StyleSheet.create({
-    scrollContainer: {
-        flexGrow: 1,
-        justifyContent: 'center',
-        paddingBottom: 20,  // Espacio para evitar que el contenido sea cubierto por el tab
-    },
     container: {
-        paddingHorizontal: 16,
         backgroundColor: colors.GRAY_BACKGROUND,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: colors.PRYMARY_COLOR,
-        textAlign: 'center',
-        marginBottom: 20,
-    },
-    inputContainer: {
-        marginBottom: 15,
-        width: '100%', // Para que los inputs ocupen todo el ancho posible
-    },
-    label: {
-        fontSize: 16,
-        color: colors.SECONDARY_COLOR,
-        marginBottom: 5,
+        height: '100%',
+        padding: 16,
     },
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
         padding: 10,
+        marginVertical: 10,
         borderRadius: 8,
-        backgroundColor: '#fff',
-        width: '100%',
-    },
-    button: {
-        marginTop: 30,
-        paddingVertical: 15,
-        borderRadius: 10,
-        backgroundColor: colors.PRYMARY_COLOR,
-        alignItems: 'center',
-        width: '100%', // Botón más ancho
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-    },
-    backButton: {
-        marginTop: 15,
-        paddingVertical: 15,
-        borderRadius: 10,
-        backgroundColor: colors.SECONDARY_COLOR,
-        alignItems: 'center',
-        width: '100%', // Botón más ancho
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-    },
-    buttonText: {
-        fontSize: 18,
-        color: '#fff',
-        fontWeight: 'bold',
     },
     errorText: {
         color: 'red',
-        marginTop: 5,
+        marginBottom: 8,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        width: '80%',
+    },
+    modalText: {
+        fontSize: 18,
+        marginBottom: 20,
+    },
+    closeButton: {
+        backgroundColor: colors.SECONDARY_COLOR,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+    },
+    closeButtonText: {
+        color: 'white',
+        fontSize: 16,
     },
 });
