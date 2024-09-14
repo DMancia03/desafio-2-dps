@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../styles/colors";
+import { ScrollView } from "react-native-gesture-handler";
 
 // Validación con Yup para los campos de egresos
 const validationSchema = Yup.object({
@@ -33,6 +34,9 @@ const Egresos = ({ navigation }) => {
     };
 
     return (
+      <ScrollView backgroundColor={colors.GRAY_BACKGROUND}>
+
+      
         <Formik
             initialValues={{
                 alquiler: '',
@@ -112,6 +116,8 @@ const Egresos = ({ navigation }) => {
                     {touched.egresosVarios && errors.egresosVarios && <Text style={styles.errorText}>{errors.egresosVarios}</Text>}
 
                     <Button onPress={handleSubmit} title="Guardar Egresos" color={colors.PRYMARY_COLOR} />
+                    
+                    <Button onPress={() => {navigation.navigate('Ingresos')}} title="Ver Ingresos" color={colors.PRYMARY_COLOR} />
 
                     {/* Modal para confirmar guardado */}
                     <Modal
@@ -129,12 +135,19 @@ const Egresos = ({ navigation }) => {
                                 >
                                     <Text style={styles.closeButtonText}>Cerrar</Text>
                                 </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.closeButton}
+                                    onPress={() => {navigation.navigate('Ingresos')}}
+                                >
+                                    <Text style={styles.closeButtonText}>Ver Ingresos</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </Modal>
                 </View>
             )}
         </Formik>
+        </ScrollView>
     );
 };
 
