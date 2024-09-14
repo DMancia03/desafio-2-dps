@@ -82,6 +82,12 @@ export default function App() {
           component={DatosFinancierosStack}  // Aquí usamos el Stack Navigator en vez de solo el componente Ingresos
           options={{
             title: 'Datos financieros',
+            headerStyle: {
+              backgroundColor: colors.PRYMARY_COLOR,
+            },
+            headerTitleStyle: {
+              color: colors.WHITE,
+            },
             tabBarIcon: ({ color }) => <Icon name="piggy-bank" color={color} size={26} />,
           }} 
         />
@@ -92,6 +98,12 @@ export default function App() {
           component={Calificacion}
           options={{
             title: 'Productos disponibles',
+            headerStyle: {
+              backgroundColor: colors.PRYMARY_COLOR,
+            },
+            headerTitleStyle: {
+              color: colors.WHITE,
+            },
             tabBarIcon: ({ color }) => <Icon name="account" color={color} size={26} />,
           }} 
         />
