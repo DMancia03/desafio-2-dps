@@ -4,34 +4,68 @@ import { StyleSheet, Text, View } from 'react-native';
 import colors from './src/styles/colors';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';  // Añadimos el Stack Navigator
 import Ingresos from './src/screens/datos_financieros/Ingresos';
+import Egresos from './src/screens/datos_financieros/Egresos';  // Asegúrate de tener importada esta pantalla
 import Calificacion from './src/screens/calificacion_cliente/Calificacion';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function App() {
-  const Tab = createBottomTabNavigator();
+// Creación del Stack Navigator
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
-  //Constantes para ingresos y egresos
+// Constantes para ingresos y egresos
+export default function App() {
   const [ingresos, setIngresos] = useState([]);
   const [egresos, setEgresos] = useState([]);
 
-  //Ejemplo de obtener datos y guardar datos en AsyncStorage
   useEffect(() => {
     const getIngresos = async () => {
       const ingresosStorage = await AsyncStorage.getItem('citas');
-      if(ingresosStorage){
+      if (ingresosStorage) {
         setIngresos(JSON.parse(ingresosStorage));
       }
-    }
+    };
 
     getIngresos();
   }, []);
 
-  //JSON.stringfy() para convertir a JSON
   const saveIngresos = async (citasJSON) => {
     await AsyncStorage.setItem('citas', citasJSON);
   };
+
+  // Crear un stack para los datos financieros (Ingresos -> Egresos)
+  const DatosFinancierosStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="Ingresos" 
+        component={Ingresos} 
+        options={{
+          title: 'Ingresos del Cliente',
+          headerStyle: {
+            backgroundColor: colors.PRYMARY_COLOR,
+          },
+          headerTitleStyle: {
+            color: colors.WHITE,
+          },
+        }} 
+      />
+      <Stack.Screen 
+        name="Egresos" 
+        component={Egresos} 
+        options={{
+          title: 'Egresos del Cliente',
+          headerStyle: {
+            backgroundColor: colors.PRYMARY_COLOR,
+          },
+          headerTitleStyle: {
+            color: colors.WHITE,
+          },
+        }} 
+      />
+    </Stack.Navigator>
+  );
 
   return (
     <NavigationContainer>
@@ -42,32 +76,25 @@ export default function App() {
           tabBarInactiveBackgroundColor: colors.SECONDARY_COLOR,
           tabBarInactiveTintColor: colors.WHITE,
         }} >
+        {/* Pestaña de Datos Financieros con Stack Navigator */}
         <Tab.Screen 
-          name='datos' 
-          component={Ingresos}
+          name="DatosFinancieros" 
+          component={DatosFinancierosStack}  // Aquí usamos el Stack Navigator en vez de solo el componente Ingresos
           options={{
             title: 'Datos financieros',
-            headerStyle: {
-              backgroundColor: colors.PRYMARY_COLOR,
-            },
-            headerTitleStyle: {
-              color: colors.WHITE,
-            },
-            tabBarIcon: ({ color }) => <Icon  name="piggy-bank" color={color} size={26} />,
-          }} />
+            tabBarIcon: ({ color }) => <Icon name="piggy-bank" color={color} size={26} />,
+          }} 
+        />
+        
+        {/* Pestaña de Calificación */}
         <Tab.Screen 
-          name='calificacion' 
+          name="calificacion" 
           component={Calificacion}
           options={{
             title: 'Productos disponibles',
-            headerStyle: {
-              backgroundColor: colors.PRYMARY_COLOR,
-            },
-            headerTitleStyle: {
-              color: colors.WHITE,
-            },
-            tabBarIcon: ({ color }) => <Icon  name="account" color={color} size={26} />,
-          }} />
+            tabBarIcon: ({ color }) => <Icon name="account" color={color} size={26} />,
+          }} 
+        />
       </Tab.Navigator>
 
       <StatusBar style="auto" backgroundColor={colors.PRYMARY_COLOR} />
