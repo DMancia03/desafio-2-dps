@@ -114,10 +114,14 @@ const Egresos = ({ navigation }) => {
                         value={values.egresosVarios}
                     />
                     {touched.egresosVarios && errors.egresosVarios && <Text style={styles.errorText}>{errors.egresosVarios}</Text>}
-
-                    <Button onPress={handleSubmit} title="Guardar Egresos" color={colors.PRYMARY_COLOR} />
+                    {/* Botones*/}
+                    <TouchableOpacity style = {styles.button} onPress = {handleSubmit}>
+                        <Text style = {styles.buttonText}>Guardar Egresos</Text>
+                    </TouchableOpacity>
                     
-                    <Button onPress={() => {navigation.navigate('Ingresos')}} title="Ver Ingresos" color={colors.PRYMARY_COLOR} />
+                    <TouchableOpacity style = {styles.button} onPress = {() => {navigation.navigate('Ingresos')}}>
+                        <Text style = {styles.buttonText}>Ver Ingresos</Text>
+                    </TouchableOpacity>
 
                     {/* Modal para confirmar guardado */}
                     <Modal
@@ -197,4 +201,22 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
     },
+    button: {
+        backgroundColor: '#4CAF50',
+        paddingVertical: 15,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 5 },
+        elevation: 4,
+        marginTop: 10,
+      },
+      buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+    
 });
