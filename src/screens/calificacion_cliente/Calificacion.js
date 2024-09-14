@@ -8,8 +8,28 @@ import tarjetas from "../../data/tarjetas";
 import TitleContainer from "../../components/TitleContainer";
 import { ProgressChart } from "react-native-chart-kit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {BarChart} from "react-native-chart-kit";
 
 const Calificacion = ({ navigation }) => {
+    const chartConfig = {
+        backgroundGradientFrom: "white",
+        backgroundGradientFromOpacity: 0,
+        backgroundGradientTo: "white",
+        backgroundGradientToOpacity: 1,
+        color: (opacity = 1) => `rgba(1, 1, 1, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+        useShadowColorFromDataset: false // optional
+      };
+
+      const [data, setData] = useState({
+        labels: ["Ingresos", "Egresos"],
+        datasets: [
+          {
+            data: [0, 0]
+          }
+        ]
+      });
     const [ingresos, setIngresos] = useState([]);
     const [egresos, setEgresos] = useState([]);
     const [ingresosTotales, setIngresosTotales] = useState(0);
@@ -40,20 +60,19 @@ const Calificacion = ({ navigation }) => {
                 + (!isNaN(auxEgr.serviciosPublicos) ? parseFloat(auxEgr.serviciosPublicos) : 0) 
                 + (!isNaN(auxEgr.saludSeguro) ? parseFloat(auxEgr.saludSeguro) : 0)
                 + (!isNaN(auxEgr.egresosVarios) ? parseFloat(auxEgr.egresosVarios) : 0));
-                //const egresosTotales = 0;
-                //Alert.alert(auxEgr.alquiler);
+                
+                setData({
+                    labels: ["Ingresos", "Egresos"],
+                    datasets: [
+                      {
+                        data: [ingresosTotales, egresosTotales]
+                      }
+                    ]
+                  })
             }
         };
-
-        const getEgresos = async () => {
-            
-            if(egresosStorage){
-                setEgresos(egresosStorage);
-            }
-        }
     
         getIngresos();
-        setEgresos();
     }, []);
 
     //Llenar arrays con productos y tarjetas dependiendo de la calificación
@@ -156,6 +175,15 @@ const Calificacion = ({ navigation }) => {
                         </>
                     ) : null
                 }
+
+<BarChart
+  data={data}
+  width={200}
+  height={220}
+  yAxisLabel="$"
+  chartConfig={chartConfig}
+  verticalLabelRotation={30}
+/>
 
                 {
                     cards.length > 0 ? (
