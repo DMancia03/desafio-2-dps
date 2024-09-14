@@ -82,6 +82,10 @@ const Ingresos = ({ navigation }) => {
           <TouchableOpacity style = {styles.button} onPress = {handleSubmit}>
             <Text style = {styles.buttonText}>Guardar Ingresos</Text>
           </TouchableOpacity>
+          {/* Botón para regresar a la pantalla de Ingresos */}
+          <TouchableOpacity style = {styles.button} onPress = {() => {navigation.navigate('Egresos')}}>
+            <Text style = {styles.buttonText}>Ver egresos</Text>
+          </TouchableOpacity>
         </View>
       )}
     </Formik>
