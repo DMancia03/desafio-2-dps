@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TextInput, Button, FlatList} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../styles/colors";
 
 // Validación con Yup
@@ -12,14 +13,24 @@ const validationSchema = Yup.object({
 });
 
 const Ingresos = ({ navigation }) => {
-    return (
+    const guardarIngresos = async (values) => {
+        try {
+          // Guardar los valores en AsyncStorage
+          await AsyncStorage.setItem('ingresos', JSON.stringify(values));
+          Alert.alert('Guardado', 'Los ingresos han sido guardados exitosamente.');
+          // Navegar a la pantalla de Resultados
+          navigation.navigate('Resultados');
+        } catch (error) {
+          console.error('Error al guardar los ingresos:', error);
+        }
+      };
+    
+      return (
         <Formik
           initialValues={{ ingreso1: '', ingreso2: '', ingreso3: '' }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            // Enviar datos o hacer lo que necesites
-            console.log(values);
-            navigation.navigate('Resultados', { ingresos: values });
+            guardarIngresos(values);  // Guardar los datos al enviar el formulario
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
