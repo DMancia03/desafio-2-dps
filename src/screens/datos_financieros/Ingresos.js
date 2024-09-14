@@ -84,7 +84,7 @@ const Ingresos = ({ navigation }) => {
           </TouchableOpacity>
           {/* Botón para regresar a la pantalla de Ingresos */}
           <TouchableOpacity style = {styles.button} onPress = {() => {navigation.navigate('Egresos')}}>
-            <Text style = {styles.buttonText}>Ver egresos</Text>
+            <Text style = {styles.buttonText}>Ver Egresos</Text>
           </TouchableOpacity>
         </View>
       )}
