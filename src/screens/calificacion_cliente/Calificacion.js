@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import { View, Text, StyleSheet, Image, ScrollView, FlatList, Dimensions } from 'react-native';
+import React, {useState, useEffect} from "react";
+import { View, Text, StyleSheet, Image, ScrollView, FlatList, Dimensions, Alert } from 'react-native';
 import colors from "../../styles/colors";
 import ProductContainer from "../../components/ProductContainer";
 import CardContainer from "../../components/CardContainer";
@@ -7,25 +7,54 @@ import productos from "../../data/productos";
 import tarjetas from "../../data/tarjetas";
 import TitleContainer from "../../components/TitleContainer";
 import { ProgressChart } from "react-native-chart-kit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Calificacion = ({ navigation }) => {
-    const ingresos = 5000;
-    const egresos = 2900;
+    const [ingresos, setIngresos] = useState([]);
+    const [egresos, setEgresos] = useState([]);
+    const [ingresosTotales, setIngresosTotales] = useState(0);
+    const [egresosTotales, setEgresosTotales] = useState(890);
+    //setIngresosTotales(ingresos.ingreso1);
+    //const [libre, setLibre] = useState(0);
+    //const [disponibilidad_decimal, setDisponibilidad_decimal] = useState(0);
+    //const [disponibilidad_porcentaje, setDisponibilidad_porcentaje] = useState(0);
     let libre = 0;
     let disponibilidad_decimal = 0;
     let disponibilidad_porcentaje = 0;
 
-    //Arrays principales
-    let products = productos.riesgo_default;
-    let cards = tarjetas.riesgo_default;
+    useEffect(() => {
+        const getIngresos = async () => {
+            const ingresosStorage = await AsyncStorage.getItem('ingresos');
+            const egresosStorage = await AsyncStorage.getItem('egresos');
+            if (ingresosStorage && egresosStorage) {
+                const auxIng = JSON.parse(ingresosStorage);
+                const auxEgr = JSON.parse(egresosStorage);
+                setIngresos(auxIng);
+                setEgresos(auxEgr);
+                setIngresosTotales((!isNaN(auxIng.monto) ? parseFloat(auxIng.monto) : 0));
 
-    const setProducts = (array) => {
-        products = array;
-    }
+                setEgresosTotales((!isNaN(auxEgr.alquiler) ? parseFloat(auxEgr.alquiler) : 0) 
+                + (!isNaN(auxEgr.canastaBasica) ? parseFloat(auxEgr.canastaBasica) : 0) 
+                + (!isNaN(auxEgr.financiaciones) ? parseFloat(auxEgr.financiaciones) : 0)
+                + (!isNaN(auxEgr.transporte) ? parseFloat(auxEgr.transporte) : 0) 
+                + (!isNaN(auxEgr.serviciosPublicos) ? parseFloat(auxEgr.serviciosPublicos) : 0) 
+                + (!isNaN(auxEgr.saludSeguro) ? parseFloat(auxEgr.saludSeguro) : 0)
+                + (!isNaN(auxEgr.egresosVarios) ? parseFloat(auxEgr.egresosVarios) : 0));
+                //const egresosTotales = 0;
+                //Alert.alert(auxEgr.alquiler);
+            }
+        };
 
-    const setCards = (array) => {
-        cards = array;
-    }
+        const getEgresos = async () => {
+            
+            if(egresosStorage){
+                setEgresos(egresosStorage);
+            }
+        }
+    
+        getIngresos();
+        setEgresos();
+    }, []);
 
     //Llenar arrays con productos y tarjetas dependiendo de la calificación
     const llenarExtremo = () => {
@@ -58,40 +87,56 @@ const Calificacion = ({ navigation }) => {
         setCards(tarjetas.riesgo_excelente);
     }
 
-    if(ingresos > 0 && egresos > 0){
-        libre = ingresos - egresos;
-        disponibilidad_decimal = libre.toFixed(2) / ingresos.toFixed(2);
-        disponibilidad_porcentaje = disponibilidad_decimal.toFixed(2) * 100;
+    //Arrays principales
+    let products = productos.riesgo_default;
+    let cards = tarjetas.riesgo_default;
 
-        if(ingresos <= egresos) llenarExtremo();
-        else if(ingresos <= 360) llenarAlto();
-        else if(ingresos > 360 && ingresos <= 700){
-            if(disponibilidad_porcentaje <= 40) llenarAlto();
-            else llenarSuficiente();
-        }
-        else if(ingresos > 700 && ingresos <= 1200){
-            if(disponibilidad_porcentaje <= 20) llenarAlto();
-            else if(disponibilidad_porcentaje > 20 && disponibilidad_porcentaje <= 40) llenarSuficiente();
-            else llenarBueno();
-        }
-        else if(ingresos > 1200 && ingresos <= 3000){
-            if(disponibilidad_porcentaje <= 20) llenarSuficiente();
-            else if(disponibilidad_porcentaje > 20 && disponibilidad_porcentaje <= 40) llenarBueno();
-            else llenarMuyBueno();
-        }
-        else if(ingresos > 3000){
-            if(disponibilidad_porcentaje <= 20) llenarBueno();
-            else if(disponibilidad_porcentaje > 20 && disponibilidad_porcentaje <= 30) llenarMuyBueno();
-            else llenarExcelente();
+    const setProducts = (array) => {
+        products = array;
+    }
+
+    const setCards = (array) => {
+        cards = array;
+    }
+
+    const calcularDisponibilidad = () => {
+        if(ingresosTotales > 0 && egresosTotales > 0){
+            libre = (ingresosTotales - egresosTotales);
+            disponibilidad_decimal = (libre.toFixed(2) / ingresosTotales);
+            disponibilidad_porcentaje = (disponibilidad_decimal.toFixed(2) * 100);
+    
+            if(ingresosTotales <= egresosTotales) llenarExtremo();
+            else if(ingresosTotales <= 360) llenarAlto();
+            else if(ingresosTotales > 360 && ingresosTotales <= 700){
+                if(disponibilidad_porcentaje <= 40) llenarAlto();
+                else llenarSuficiente();
+            }
+            else if(ingresosTotales > 700 && ingresosTotales <= 1200){
+                if(disponibilidad_porcentaje <= 20) llenarAlto();
+                else if(disponibilidad_porcentaje > 20 && disponibilidad_porcentaje <= 40) llenarSuficiente();
+                else llenarBueno();
+            }
+            else if(ingresosTotales > 1200 && ingresosTotales <= 3000){
+                if(disponibilidad_porcentaje <= 20) llenarSuficiente();
+                else if(disponibilidad_porcentaje > 20 && disponibilidad_porcentaje <= 40) llenarBueno();
+                else llenarMuyBueno();
+            }
+            else if(ingresosTotales > 3000){
+                if(disponibilidad_porcentaje <= 20) llenarBueno();
+                else if(disponibilidad_porcentaje > 20 && disponibilidad_porcentaje <= 30) llenarMuyBueno();
+                else llenarExcelente();
+            }
         }
     }
+
+    calcularDisponibilidad();
     
     return(
         <ScrollView style={styles.scroll}>
             <View style={styles.section}>
                 {
                     disponibilidad_porcentaje > 0 ? (
-                        <TitleContainer title={"Tienes una disponibilidad de " + disponibilidad_porcentaje.toFixed(2) + "%"} />
+                        <TitleContainer title={"Tienes una disponibilidad de " + disponibilidad_porcentaje.toFixed(2) + "%  | Ingresos: $" + ingresosTotales + " | Egresos: $" + egresosTotales} />
                     ) : (
                         <TitleContainer title={"Tienes una disponibilidad negativa :c"} />
                     )
