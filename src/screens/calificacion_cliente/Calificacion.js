@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { View, Text, StyleSheet, Image, ScrollView, FlatList, Dimensions, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, FlatList, Dimensions, Alert, TouchableOpacity } from 'react-native';
 import colors from "../../styles/colors";
 import ProductContainer from "../../components/ProductContainer";
 import CardContainer from "../../components/CardContainer";
@@ -9,6 +9,7 @@ import TitleContainer from "../../components/TitleContainer";
 import { ProgressChart } from "react-native-chart-kit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {BarChart} from "react-native-chart-kit";
+import { Button } from "react-native-web";
 
 const Calificacion = ({ navigation }) => {
     const chartConfig = {
@@ -42,10 +43,13 @@ const Calificacion = ({ navigation }) => {
     let disponibilidad_decimal = 0;
     let disponibilidad_porcentaje = 0;
 
+    const [calculado, setCalculado] = useState(false);
+
     useEffect(() => {
         const getIngresos = async () => {
             const ingresosStorage = await AsyncStorage.getItem('ingresos');
             const egresosStorage = await AsyncStorage.getItem('egresos');
+
             if (ingresosStorage && egresosStorage) {
                 const auxIng = JSON.parse(ingresosStorage);
                 const auxEgr = JSON.parse(egresosStorage);
@@ -68,12 +72,12 @@ const Calificacion = ({ navigation }) => {
                         data: [ingresosTotales, egresosTotales]
                       }
                     ]
-                  })
+                  });
             }
         };
     
         getIngresos();
-    }, []);
+    }, [calculado]);
 
     //Llenar arrays con productos y tarjetas dependiendo de la calificación
     const llenarExtremo = () => {
@@ -149,10 +153,19 @@ const Calificacion = ({ navigation }) => {
     }
 
     calcularDisponibilidad();
+
+    const handleCalcular = () => {
+        setCalculado(!calculado);
+        Alert.alert('Calificación', 'Se ha calculado tu calificación exitosamente');
+    }
     
     return(
         <ScrollView style={styles.scroll}>
             <View style={styles.section}>
+                <TouchableOpacity style = {styles.button} onPress={handleCalcular}>
+                    <Text style = {styles.buttonText}>Calcular</Text>
+                </TouchableOpacity>
+          
                 {
                     disponibilidad_porcentaje > 0 ? (
                         <TitleContainer title={"Tienes una disponibilidad de " + disponibilidad_porcentaje.toFixed(2) + "%  | Ingresos: $" + ingresosTotales + " | Egresos: $" + egresosTotales} />
@@ -249,5 +262,22 @@ const styles = StyleSheet.create({
     container_body_line: {
         display: 'flex',
         flexDirection: 'row',
-    }
+    },
+    button: {
+        backgroundColor: '#4CAF50',
+        paddingVertical: 15,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 5 },
+        elevation: 4,
+        marginTop: 10,
+      },
+      buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
 });
