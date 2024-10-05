@@ -1,11 +1,11 @@
 import React from "react";
 import colors from "../styles/colors";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 
 const ProductContainer = ({product}) => {
     return (
-        <View style={styles.productContainer}>
+        <TouchableOpacity style={styles.productContainer}>
             <View style={styles.productContainer_Header}>
                 <Text style={styles.productContainer_Title}>{product.title}</Text>
             </View>
@@ -20,7 +20,7 @@ const ProductContainer = ({product}) => {
                     )
                 }
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 
