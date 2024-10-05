@@ -165,7 +165,7 @@ const Calificacion = ({ navigation }) => {
                 <TouchableOpacity style = {styles.button} onPress={handleCalcular}>
                     <Text style = {styles.buttonText}>Calcular</Text>
                 </TouchableOpacity>
-          
+
                 {
                     disponibilidad_porcentaje > 0 ? (
                         <TitleContainer title={"Tienes una disponibilidad de " + disponibilidad_porcentaje.toFixed(2) + "%  | Ingresos: $" + ingresosTotales + " | Egresos: $" + egresosTotales} />
@@ -173,6 +173,18 @@ const Calificacion = ({ navigation }) => {
                         <TitleContainer title={"Tienes una disponibilidad negativa :c"} />
                     )
                 }
+
+                <View style={styles.container}>
+                <BarChart
+                    data={data}
+                    width={200}
+                    height={220}
+                    yAxisLabel="$"
+                    chartConfig={chartConfig}
+                    verticalLabelRotation={30}
+                />
+                </View>
+
                 {
                     products.length > 0 ? (
                         <>
@@ -188,15 +200,6 @@ const Calificacion = ({ navigation }) => {
                         </>
                     ) : null
                 }
-
-<BarChart
-  data={data}
-  width={200}
-  height={220}
-  yAxisLabel="$"
-  chartConfig={chartConfig}
-  verticalLabelRotation={30}
-/>
 
                 {
                     cards.length > 0 ? (
@@ -232,6 +235,10 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         gap: 20,
+        padding:20,
+        backgroundColor: colors.WHITE,
+        margin:20,
+        borderRadius:10,
     },
     card: {
         width: '100%',
@@ -272,12 +279,12 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
         shadowOffset: { width: 0, height: 5 },
         elevation: 4,
-        marginTop: 10,
-      },
-      buttonText: {
+        margin: 20,
+    },
+    buttonText: {
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
-      },
+    },
 });
