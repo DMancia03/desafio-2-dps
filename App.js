@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';  // Añadimos el
 import Ingresos from './src/screens/datos_financieros/Ingresos';
 import Egresos from './src/screens/datos_financieros/Egresos';  // Asegúrate de tener importada esta pantalla
 import Calificacion from './src/screens/calificacion_cliente/Calificacion';
+import RegistroSolicitud from './src/screens/calificacion_cliente/RegistroSolicitud'; // nuevo componente
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -107,6 +108,23 @@ export default function App() {
             tabBarIcon: ({ color }) => <Icon name="account" color={color} size={26} />,
           }} 
         />
+
+        {/* Pestaña de Solicitud */}
+        <Tab.Screen 
+          name="solicitud" 
+          component={RegistroSolicitud}
+          options={{
+            title: 'Registro de Producto',
+            headerStyle: {
+              backgroundColor: colors.PRYMARY_COLOR,
+            },
+            headerTitleStyle: {
+              color: colors.WHITE,
+            },
+            tabBarIcon: ({ color }) => <Icon name="archive" color={color} size={26} />,
+          }} 
+        />
+
       </Tab.Navigator>
 
       <StatusBar style="auto" backgroundColor={colors.PRYMARY_COLOR} />

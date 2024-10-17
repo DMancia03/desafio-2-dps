@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../styles/colors";
-import { ScrollView } from "react-native-gesture-handler";
+
 
 // Validación con Yup para los campos de egresos
 const validationSchema = Yup.object({
@@ -20,22 +20,19 @@ const validationSchema = Yup.object({
 const Egresos = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);  // Estado para el modal
 
-    const guardarEgresos = async (values, resetForm) => {
+    const guardarEgresos = async (values) => {
         try {
             // Guardar los valores de egresos en AsyncStorage
             await AsyncStorage.setItem('egresos', JSON.stringify(values));
             // Mostrar modal de éxito
             setModalVisible(true);
-            // Limpiar el formulario
-            resetForm();
         } catch (error) {
             console.error('Error al guardar los egresos:', error);
         }
     };
 
     return (
-      <ScrollView backgroundColor={colors.GRAY_BACKGROUND}>
-
+      
       
         <Formik
             initialValues={{
@@ -48,7 +45,7 @@ const Egresos = ({ navigation }) => {
                 egresosVarios: ''
             }}
             validationSchema={validationSchema}
-            onSubmit={(values, { resetForm }) => guardarEgresos(values, resetForm)} // Guardar datos y limpiar formulario
+            onSubmit={(values) => {guardarEgresos(values)}} // Guardar datos y limpiar formulario
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <View style={styles.container}>
@@ -151,7 +148,6 @@ const Egresos = ({ navigation }) => {
                 </View>
             )}
         </Formik>
-        </ScrollView>
     );
 };
 

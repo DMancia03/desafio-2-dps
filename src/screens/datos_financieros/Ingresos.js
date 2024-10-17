@@ -21,7 +21,7 @@ const Ingresos = ({ navigation }) => {
       // Guardar los valores en AsyncStorage
       await AsyncStorage.setItem('ingresos', JSON.stringify(values));
       Alert.alert('Guardado', 'Los ingresos han sido guardados exitosamente.');
-      // Navegar a la pantalla de Resultados
+      // Navegar a la pantalla de Egresos
       navigation.navigate('Egresos');
     } catch (error) {
       console.error('Error al guardar los ingresos:', error);
