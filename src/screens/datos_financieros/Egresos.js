@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Button, Modal, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../styles/colors";
-
 
 // Validación con Yup para los campos de egresos
 const validationSchema = Yup.object({
@@ -32,8 +31,6 @@ const Egresos = ({ navigation }) => {
     };
 
     return (
-      
-      
         <Formik
             initialValues={{
                 alquiler: '',
@@ -45,107 +42,109 @@ const Egresos = ({ navigation }) => {
                 egresosVarios: ''
             }}
             validationSchema={validationSchema}
-            onSubmit={(values) => {guardarEgresos(values)}} // Guardar datos y limpiar formulario
+            onSubmit={(values) => { guardarEgresos(values); }} // Guardar datos y limpiar formulario
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                <View style={styles.container}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Alquiler / Hipoteca"
-                        onChangeText={handleChange('alquiler')}
-                        onBlur={handleBlur('alquiler')}
-                        value={values.alquiler}
-                    />
-                    {touched.alquiler && errors.alquiler && <Text style={styles.errorText}>{errors.alquiler}</Text>}
+                <ScrollView contentContainerStyle={styles.scrollContainer}>
+                    <View style={styles.container}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Alquiler / Hipoteca"
+                            onChangeText={handleChange('alquiler')}
+                            onBlur={handleBlur('alquiler')}
+                            value={values.alquiler}
+                        />
+                        {touched.alquiler && errors.alquiler && <Text style={styles.errorText}>{errors.alquiler}</Text>}
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Canasta Básica"
-                        onChangeText={handleChange('canastaBasica')}
-                        onBlur={handleBlur('canastaBasica')}
-                        value={values.canastaBasica}
-                    />
-                    {touched.canastaBasica && errors.canastaBasica && <Text style={styles.errorText}>{errors.canastaBasica}</Text>}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Canasta Básica"
+                            onChangeText={handleChange('canastaBasica')}
+                            onBlur={handleBlur('canastaBasica')}
+                            value={values.canastaBasica}
+                        />
+                        {touched.canastaBasica && errors.canastaBasica && <Text style={styles.errorText}>{errors.canastaBasica}</Text>}
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Financiamientos (Préstamos fuera de hipoteca)"
-                        onChangeText={handleChange('financiaciones')}
-                        onBlur={handleBlur('financiaciones')}
-                        value={values.financiaciones}
-                    />
-                    {touched.financiaciones && errors.financiaciones && <Text style={styles.errorText}>{errors.financiaciones}</Text>}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Financiamientos (Préstamos fuera de hipoteca)"
+                            onChangeText={handleChange('financiaciones')}
+                            onBlur={handleBlur('financiaciones')}
+                            value={values.financiaciones}
+                        />
+                        {touched.financiaciones && errors.financiaciones && <Text style={styles.errorText}>{errors.financiaciones}</Text>}
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Transporte"
-                        onChangeText={handleChange('transporte')}
-                        onBlur={handleBlur('transporte')}
-                        value={values.transporte}
-                    />
-                    {touched.transporte && errors.transporte && <Text style={styles.errorText}>{errors.transporte}</Text>}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Transporte"
+                            onChangeText={handleChange('transporte')}
+                            onBlur={handleBlur('transporte')}
+                            value={values.transporte}
+                        />
+                        {touched.transporte && errors.transporte && <Text style={styles.errorText}>{errors.transporte}</Text>}
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Servicios Públicos"
-                        onChangeText={handleChange('serviciosPublicos')}
-                        onBlur={handleBlur('serviciosPublicos')}
-                        value={values.serviciosPublicos}
-                    />
-                    {touched.serviciosPublicos && errors.serviciosPublicos && <Text style={styles.errorText}>{errors.serviciosPublicos}</Text>}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Servicios Públicos"
+                            onChangeText={handleChange('serviciosPublicos')}
+                            onBlur={handleBlur('serviciosPublicos')}
+                            value={values.serviciosPublicos}
+                        />
+                        {touched.serviciosPublicos && errors.serviciosPublicos && <Text style={styles.errorText}>{errors.serviciosPublicos}</Text>}
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Salud y Seguro"
-                        onChangeText={handleChange('saludSeguro')}
-                        onBlur={handleBlur('saludSeguro')}
-                        value={values.saludSeguro}
-                    />
-                    {touched.saludSeguro && errors.saludSeguro && <Text style={styles.errorText}>{errors.saludSeguro}</Text>}
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Salud y Seguro"
+                            onChangeText={handleChange('saludSeguro')}
+                            onBlur={handleBlur('saludSeguro')}
+                            value={values.saludSeguro}
+                        />
+                        {touched.saludSeguro && errors.saludSeguro && <Text style={styles.errorText}>{errors.saludSeguro}</Text>}
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Egresos Varios"
-                        onChangeText={handleChange('egresosVarios')}
-                        onBlur={handleBlur('egresosVarios')}
-                        value={values.egresosVarios}
-                    />
-                    {touched.egresosVarios && errors.egresosVarios && <Text style={styles.errorText}>{errors.egresosVarios}</Text>}
-                    {/* Botones*/}
-                    <TouchableOpacity style = {styles.button} onPress = {handleSubmit}>
-                        <Text style = {styles.buttonText}>Guardar Egresos</Text>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity style = {styles.button} onPress = {() => {navigation.navigate('Ingresos')}}>
-                        <Text style = {styles.buttonText}>Ver Ingresos</Text>
-                    </TouchableOpacity>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Egresos Varios"
+                            onChangeText={handleChange('egresosVarios')}
+                            onBlur={handleBlur('egresosVarios')}
+                            value={values.egresosVarios}
+                        />
+                        {touched.egresosVarios && errors.egresosVarios && <Text style={styles.errorText}>{errors.egresosVarios}</Text>}
 
-                    {/* Modal para confirmar guardado */}
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => setModalVisible(false)}
-                    >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <Text style={styles.modalText}>Egresos guardados exitosamente.</Text>
-                                <TouchableOpacity
-                                    style={styles.closeButton}
-                                    onPress={() => setModalVisible(false)}
-                                >
-                                    <Text style={styles.closeButtonText}>Cerrar</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.closeButton}
-                                    onPress={() => {navigation.navigate('Ingresos')}}
-                                >
-                                    <Text style={styles.closeButtonText}>Ver Ingresos</Text>
-                                </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                            <Text style={styles.buttonText}>Guardar Egresos</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate('Ingresos'); }}>
+                            <Text style={styles.buttonText}>Ver Ingresos</Text>
+                        </TouchableOpacity>
+
+                        {/* Modal para confirmar guardado */}
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalVisible}
+                            onRequestClose={() => setModalVisible(false)}
+                        >
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalContent}>
+                                    <Text style={styles.modalText}>Egresos guardados exitosamente.</Text>
+                                    <TouchableOpacity
+                                        style={styles.closeButton}
+                                        onPress={() => setModalVisible(false)}
+                                    >
+                                        <Text style={styles.closeButtonText}>Cerrar</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.closeButton}
+                                        onPress={() => { navigation.navigate('Ingresos'); }}
+                                    >
+                                        <Text style={styles.closeButtonText}>Ver Ingresos</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                        </View>
-                    </Modal>
-                </View>
+                        </Modal>
+                    </View>
+                </ScrollView>
             )}
         </Formik>
     );
@@ -154,9 +153,11 @@ const Egresos = ({ navigation }) => {
 export default Egresos;
 
 const styles = StyleSheet.create({
+    scrollContainer: {
+        flexGrow: 1,
+    },
     container: {
         backgroundColor: colors.GRAY_BACKGROUND,
-        height: '100%',
         padding: 16,
     },
     input: {
@@ -207,12 +208,11 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 5 },
         elevation: 4,
         marginTop: 10,
-      },
-      buttonText: {
+    },
+    buttonText: {
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
-      },
-    
+    },
 });

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button, Alert, ScrollView } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import axios from 'axios';  // Importar Axios
-
 
 const RegistroSolicitud = () => {
   const [producto, setProducto] = useState('');
@@ -13,10 +12,9 @@ const RegistroSolicitud = () => {
   const [estado, setEstado] = useState('SOLICITADO');
   const [direccion, setDireccion] = useState('');
   const [tokenPush, setTokenPush] = useState("");
-  const [ingresos, setIngresos] = useState('');  // Nuevo estado para ingresos
+  const [ingresos, setIngresos] = useState('');
   const [egresos, setEgresos] = useState('');
   
-
   // Función para tomar una foto con la cámara
   const takePhoto = async (setImage) => {
     const options = {
@@ -35,10 +33,8 @@ const RegistroSolicitud = () => {
       setImage(result.assets[0].base64); // Guarda la imagen en formato base64
     }
   };
-  
 
   const handleSubmit = async () => {
-    // Validación básica de campos
     if (!producto || !nombre || !telefono || !direccion) {
       Alert.alert('Error', 'Por favor, completa todos los campos obligatorios.');
       return;
@@ -57,24 +53,16 @@ const RegistroSolicitud = () => {
       egresos,
     };
 
-    console.log("Datos que se enviarán a la API:", requestData);
-
     try {
       const response = await axios.post(
         'https://api-rest-desafio-dps-747620528393.us-central1.run.app/Solicitudes', 
         requestData,
-        {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        }
+        { headers: { 'Content-Type': 'application/json' } }
       );
 
-      console.log('Respuesta de la API:', response.data);
       Alert.alert('Éxito', 'La solicitud ha sido registrada con éxito.');
       resetFields();
     } catch (error) {
-      console.error('Error al registrar la solicitud:', error.response ? error.response.data : error.message);
       Alert.alert('Error', 'No se pudo registrar la solicitud. Inténtalo de nuevo.');
     }
   };
@@ -92,87 +80,89 @@ const RegistroSolicitud = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Registro de Solicitud</Text>
-      <Text style={styles.label}>Producto:</Text>
-      <TextInput
-        placeholder="Ingrese el producto"
-        value={producto}
-        onChangeText={setProducto}
-        style={styles.input}
-      />
+    <ScrollView style={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Registro de Solicitud</Text>
+        <Text style={styles.label}>Producto:</Text>
+        <TextInput
+          placeholder="Ingrese el producto"
+          value={producto}
+          onChangeText={setProducto}
+          style={styles.input}
+        />
 
-      <Text style={styles.label}>Nombre Completo:</Text>
-      <TextInput
-        placeholder="Ingrese su nombre completo"
-        value={nombre}
-        onChangeText={setNombre}
-        style={styles.input}
-      />
+        <Text style={styles.label}>Nombre Completo:</Text>
+        <TextInput
+          placeholder="Ingrese su nombre completo"
+          value={nombre}
+          onChangeText={setNombre}
+          style={styles.input}
+        />
 
-      <Text style={styles.label}>Carnet (Foto):</Text>
-      <TouchableOpacity onPress={() => takePhoto(setCarnetBase64)}>
-        <View style={styles.imagePicker}>
-          <Text style={styles.imageText}>{carnetBase64 ? 'Foto tomada' : 'Tomar foto del Carnet'}</Text>
-        </View>
-      </TouchableOpacity>
+        <Text style={styles.label}>Carnet (Foto):</Text>
+        <TouchableOpacity onPress={() => takePhoto(setCarnetBase64)}>
+          <View style={styles.imagePicker}>
+            <Text style={styles.imageText}>{carnetBase64 ? 'Foto tomada' : 'Tomar foto del Carnet'}</Text>
+          </View>
+        </TouchableOpacity>
 
-      <Text style={styles.label}>Selfie:</Text>
-      <TouchableOpacity onPress={() => takePhoto(setSelfieBase64)}>
-        <View style={styles.imagePicker}>
-          <Text style={styles.imageText}>{selfieBase64 ? 'Selfie tomada' : 'Tomar una Selfie'}</Text>
-        </View>
-      </TouchableOpacity>
+        <Text style={styles.label}>Selfie:</Text>
+        <TouchableOpacity onPress={() => takePhoto(setSelfieBase64)}>
+          <View style={styles.imagePicker}>
+            <Text style={styles.imageText}>{selfieBase64 ? 'Selfie tomada' : 'Tomar una Selfie'}</Text>
+          </View>
+        </TouchableOpacity>
 
-      <Text style={styles.label}>Teléfono:</Text>
-      <TextInput
-        placeholder="Ingrese su número de teléfono"
-        value={telefono}
-        onChangeText={setTelefono}
-        style={styles.input}
-      />
+        <Text style={styles.label}>Teléfono:</Text>
+        <TextInput
+          placeholder="Ingrese su número de teléfono"
+          value={telefono}
+          onChangeText={setTelefono}
+          style={styles.input}
+        />
 
-      <Text style={styles.label}>Dirección:</Text>
-      <TextInput
-        placeholder="Ingrese su dirección"
-        value={direccion}
-        onChangeText={setDireccion}
-        style={styles.input}
-      />
+        <Text style={styles.label}>Dirección:</Text>
+        <TextInput
+          placeholder="Ingrese su dirección"
+          value={direccion}
+          onChangeText={setDireccion}
+          style={styles.input}
+        />
 
-            <Text style={styles.label}>Ingresos:</Text>
-              <TextInput
-                placeholder="Token Push"
-                value={tokenPush}
-                onChangeText={setTokenPush}
-                style={styles.input}
-            />
+        <Text style={styles.label}>Token Push:</Text>
+        <TextInput
+          placeholder="Token Push"
+          value={tokenPush}
+          onChangeText={setTokenPush}
+          style={styles.input}
+        />
 
+        <Text style={styles.label}>Ingresos:</Text>
+        <TextInput
+          placeholder="Ingrese sus ingresos"
+          value={ingresos}
+          onChangeText={setIngresos}
+          style={styles.input}
+        />
 
-<Text style={styles.label}>Ingresos:</Text>
-      <TextInput
-        placeholder="Ingrese sus ingresos"
-        value={ingresos}
-        onChangeText={setIngresos}
-        style={styles.input}
-      />
+        <Text style={styles.label}>Egresos:</Text>
+        <TextInput
+          placeholder="Ingrese sus egresos"
+          value={egresos}
+          onChangeText={setEgresos}
+          style={styles.input}
+        />
 
-      <Text style={styles.label}>Egresos:</Text>
-      <TextInput
-        placeholder="Ingrese sus egresos"
-        value={egresos}
-        onChangeText={setEgresos}
-        style={styles.input}
-      />
-
-
-
-      <Button title="Enviar Solicitud" onPress={handleSubmit} />
-    </View>
+        <Button title="Enviar Solicitud" onPress={handleSubmit} />
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 20,
