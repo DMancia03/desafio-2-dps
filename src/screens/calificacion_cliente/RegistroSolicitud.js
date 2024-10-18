@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button, Alert, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
-import { Picker } from '@react-native-picker/picker'; // Importa Picker
-import axios from 'axios';  // Importar Axios
+import { Picker } from '@react-native-picker/picker';
+import axios from 'axios';  
 
-const RegistroSolicitud = () => {
-  const [producto, setProducto] = useState('');
+const RegistroSolicitud = ({ route }) => {
+  const { producto } = route.params || {}; // Obtén el producto desde los parámetros de navegación
+
+  const [selectedProducto, setSelectedProducto] = useState(producto || ''); // Asigna el valor del producto al state
+
   const [nombre, setNombre] = useState('');
   const [carnetBase64, setCarnetBase64] = useState('');
   const [selfieBase64, setSelfieBase64] = useState('');
@@ -15,7 +18,7 @@ const RegistroSolicitud = () => {
   const [tokenPush, setTokenPush] = useState("");
   const [ingresos, setIngresos] = useState('');
   const [egresos, setEgresos] = useState('');
-  
+
   const takePhoto = async (setImage) => {
     const options = {
       mediaType: 'photo',
@@ -35,13 +38,13 @@ const RegistroSolicitud = () => {
   };
 
   const handleSubmit = async () => {
-    if (!producto || !nombre || !telefono || !direccion) {
+    if (!selectedProducto || !nombre || !telefono || !direccion) {
       Alert.alert('Error', 'Por favor, completa todos los campos obligatorios.');
       return;
     }
 
     const requestData = {
-      producto,
+      producto: selectedProducto,
       nombre,
       carnetBase64,
       selfieBase64,
@@ -68,7 +71,7 @@ const RegistroSolicitud = () => {
   };
 
   const resetFields = () => {
-    setProducto('');
+    setSelectedProducto('');
     setNombre('');
     setCarnetBase64('');
     setSelfieBase64('');
@@ -79,6 +82,13 @@ const RegistroSolicitud = () => {
     setEgresos('');
   };
 
+  useEffect(() => {
+    // Cuando el componente se monta, asegura que el picker se haya seleccionado
+    if (producto) {
+      setSelectedProducto(producto);
+    }
+  }, [producto]);
+
   return (
     <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
@@ -88,8 +98,8 @@ const RegistroSolicitud = () => {
           <Text style={styles.label}>Producto:</Text>
           <View style={styles.pickerContainer}>
             <Picker
-              selectedValue={producto}
-              onValueChange={(itemValue) => setProducto(itemValue)}
+              selectedValue={selectedProducto}
+              onValueChange={(itemValue) => setSelectedProducto(itemValue)}
               style={styles.picker}
             >
               <Picker.Item label="Seleccione un producto" value="" />
@@ -189,7 +199,7 @@ const RegistroSolicitud = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
-    backgroundColor: '#f7f8fa', // Fondo claro y suave
+    backgroundColor: '#f7f8fa',
   },
   container: {
     flex: 1,
@@ -211,18 +221,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: '#003366',
   },
-  input: {
-    height: 45,
-    borderColor: '#cccccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2, // Elevación para Android
-  },
   pickerContainer: {
     borderColor: '#cccccc',
     borderWidth: 1,
@@ -235,21 +233,6 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 45,
-  },
-  imagePicker: {
-    height: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e0e0e0',
-    borderRadius: 8,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  imageText: {
-    color: '#555',
   },
   button: {
     backgroundColor: '#004080',

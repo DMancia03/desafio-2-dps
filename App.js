@@ -68,6 +68,38 @@ export default function App() {
     </Stack.Navigator>
   );
 
+  // Crear un stack para la calificación de clientes y el registro de solicitud
+  const CalificacionStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="Calificacion" 
+        component={Calificacion} 
+        options={{
+          title: 'Productos disponibles',
+          headerStyle: {
+            backgroundColor: colors.PRYMARY_COLOR,
+          },
+          headerTitleStyle: {
+            color: colors.WHITE,
+          },
+        }} 
+      />
+      <Stack.Screen 
+        name="RegistroSolicitud" 
+        component={RegistroSolicitud} 
+        options={{
+          title: 'Registro de Producto',
+          headerStyle: {
+            backgroundColor: colors.PRYMARY_COLOR,
+          },
+          headerTitleStyle: {
+            color: colors.WHITE,
+          },
+        }} 
+      />
+    </Stack.Navigator>
+  );
+
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -93,12 +125,12 @@ export default function App() {
           }} 
         />
         
-        {/* Pestaña de Calificación */}
+        {/* Pestaña de Calificación con Stack Navigator */}
         <Tab.Screen 
-          name="calificacion" 
-          component={Calificacion}
+          name="Calificacion" 
+          component={CalificacionStack}  // Aquí usamos el Stack Navigator con la pantalla de Calificación y RegistroSolicitud
           options={{
-            title: 'Productos disponibles',
+            title: 'Calificación Cliente',
             headerStyle: {
               backgroundColor: colors.PRYMARY_COLOR,
             },
@@ -108,23 +140,6 @@ export default function App() {
             tabBarIcon: ({ color }) => <Icon name="account" color={color} size={26} />,
           }} 
         />
-
-        {/* Pestaña de Solicitud */}
-        <Tab.Screen 
-          name="solicitud" 
-          component={RegistroSolicitud}
-          options={{
-            title: 'Registro de Producto',
-            headerStyle: {
-              backgroundColor: colors.PRYMARY_COLOR,
-            },
-            headerTitleStyle: {
-              color: colors.WHITE,
-            },
-            tabBarIcon: ({ color }) => <Icon name="archive" color={color} size={26} />,
-          }} 
-        />
-
       </Tab.Navigator>
 
       <StatusBar style="auto" backgroundColor={colors.PRYMARY_COLOR} />
