@@ -6,6 +6,8 @@ import axios from 'axios';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegistroSolicitud = ({ route }) => {
   const { producto } = route.params || {}; // Obtén el producto desde los parámetros de navegación
@@ -86,11 +88,26 @@ const RegistroSolicitud = ({ route }) => {
   };
 
   useEffect(() => {
+    
+
     // Cuando el componente se monta, asegura que el picker se haya seleccionado
     if (producto) {
       setSelectedProducto(producto);
     }
   }, [producto]);
+
+  useEffect(() => {
+    //Obtener token push desde el async storage
+    const getPushToken = async () => {
+      let tokenPushStorage = await AsyncStorage.getItem('tokenPush');
+      if (tokenPushStorage) {
+        tokenPushStorage = tokenPushStorage.replace('"', '').replace(']"', ']'); //Quitar comillas
+        setTokenPush(tokenPushStorage);
+      }
+    };
+
+    getPushToken();
+  })
 
   return (
     <ScrollView style={styles.scrollContainer}>

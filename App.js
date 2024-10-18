@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
+import { string } from 'yup';
 
 // Creación del Stack Navigator
 const Stack = createStackNavigator();
@@ -53,7 +54,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync().then((token) => {
+      setExpoPushToken(token);
+    });
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {setNotification(notification)});
 
@@ -99,7 +102,13 @@ export default function App() {
       });
     }
 
+    guardarTokenPush(token);
     console.log(token);
+    return token;
+  }
+
+  const guardarTokenPush = async (token) => {
+    await AsyncStorage.setItem('tokenPush', JSON.stringify(token));
   }
 
   // Crear un stack para los datos financieros (Ingresos -> Egresos)
