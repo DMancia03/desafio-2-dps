@@ -1,6 +1,16 @@
 export default {
     riesgo_test: [
         {
+            id: 'P000',
+            title: 'No tienes productos',
+            items: [{
+                id: 'P000I001',
+                icon: 'alert-circle',
+                description: 'No has ingresado tus ingresos y egresos',
+            }],
+            message_no_products: { }
+        },
+        {
             id: 'P001',
             title: 'Ayuda financiera',
             items: [{
@@ -132,7 +142,7 @@ export default {
         }
     },
     {
-        id: 'P003',
+        id: 'P004',
         title: 'Crédito personal',
         items: [{
             id: 'P003I001',
@@ -158,7 +168,7 @@ export default {
         }
     },
     {
-        id: 'P003',
+        id: 'P005',
         title: 'Crédito personal',
         items: [{
             id: 'P003I001',
@@ -184,7 +194,7 @@ export default {
         }
     },
     {
-        id: 'P003',
+        id: 'P006',
         title: 'Crédito personal',
         items: [{
             id: 'P003I001',
