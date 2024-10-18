@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "640952716639",
+    "project_id": "desafio-dps",
+    "storage_bucket": "desafio-dps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640952716639:android:1e8070bac91794993e7aea",
+        "android_client_info": {
+          "package_name": "com.dmancia.UDBBanco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa2F3UEIjc3yubAXhBYHQSUySsL-fVTLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

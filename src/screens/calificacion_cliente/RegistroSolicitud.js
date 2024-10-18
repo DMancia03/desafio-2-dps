@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';  
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
 
 const RegistroSolicitud = ({ route }) => {
   const { producto } = route.params || {}; // Obtén el producto desde los parámetros de navegación

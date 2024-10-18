@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Alert, Platform } from 'react-native';
 import colors from './src/styles/colors';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -11,6 +11,9 @@ import Calificacion from './src/screens/calificacion_cliente/Calificacion';
 import RegistroSolicitud from './src/screens/calificacion_cliente/RegistroSolicitud'; // nuevo componente
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
 
 // Creación del Stack Navigator
 const Stack = createStackNavigator();
@@ -20,6 +23,12 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const [ingresos, setIngresos] = useState([]);
   const [egresos, setEgresos] = useState([]);
+
+  //Variables para token push
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
   useEffect(() => {
     const getIngresos = async () => {
@@ -32,9 +41,66 @@ export default function App() {
     getIngresos();
   }, []);
 
+  //Notificaciones en primer plano
+  useEffect(() => {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+  }, []);
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {setNotification(notification)});
+
+    responseListener.current == Notifications.addNotificationReceivedListener(response => {console.log(response)});
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    }
+  }, [])
+
   const saveIngresos = async (citasJSON) => {
     await AsyncStorage.setItem('citas', citasJSON);
   };
+
+  //Funcion para registrar el token push
+  const registerForPushNotificationsAsync = async () => {
+    let token;
+    if(Device.isDevice){
+      const {status: existingStatus} = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if(existingStatus !== 'granted'){
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+
+      if(finalStatus !== 'granted'){
+        Alert.alert('No se pudieron obtener los permisos de notificaciones :c');
+        return;
+      }
+
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+    }else{
+      Alert.alert('Debes usar un dispositivo físico para recibir notificaciones push');
+    }
+
+    if(Platform.OS === 'android'){
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+
+    console.log(token);
+  }
 
   // Crear un stack para los datos financieros (Ingresos -> Egresos)
   const DatosFinancierosStack = () => (
