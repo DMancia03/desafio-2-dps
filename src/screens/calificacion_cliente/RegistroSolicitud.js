@@ -34,6 +34,8 @@ const RegistroSolicitud = ({ route }) => {
   const [calculado, setCalculado] = useState(false);
   //CALCULADO --------------------------------------------------------
 
+  //const [statusC, setStatusC] = useState('');
+
   const takePhoto = async (setImage) => {
     const options = {
       mediaType: 'photo',
@@ -41,13 +43,18 @@ const RegistroSolicitud = ({ route }) => {
       saveToPhotos: false,
     };
 
+   //await ImagePicker.requestCameraPermissionsAsync();
+
+    //setStatusC(await ImagePicker.useCameraPermissions());
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+      aspect: [2, 2],
+      quality: 0,
       base64: true,
+      selectionLimit: 1,
+      cameraType: ImagePicker.CameraType.Front,
     });
 
     //console.log(result.assets[0].base64);
