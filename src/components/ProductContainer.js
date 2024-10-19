@@ -7,12 +7,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 const ProductContainer = ({ product }) => {
     const navigation = useNavigation(); // Obtén la función de navegación
 
-    const handlePress = (producto) => {
-        navigation.navigate('RegistroSolicitud', { producto }); // Navegar a RegistroSolicitud pasando el producto seleccionado
+    const handlePress = (id) => {
+        navigation.navigate('RegistroSolicitud', { "id": id }); // Navegar a RegistroSolicitud pasando el producto seleccionado
     };
 
     return (
-        <TouchableOpacity style={styles.productContainer} onPress={() => handlePress(product.title)}>
+        <TouchableOpacity style={styles.productContainer} onPress={() => handlePress(product.id)}>
             <View style={styles.productContainer_Header}>
                 <Text style={styles.productContainer_Title}>{product.title}</Text>
             </View>

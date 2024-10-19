@@ -8,11 +8,12 @@ import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import listado from '../../data/listado'; //Listado de productos globales
 
 const RegistroSolicitud = ({ route }) => {
-  const { producto } = route.params || {}; // Obtén el producto desde los parámetros de navegación
+  const id = route.params.id; // Obtener el id del producto seleccionado
 
-  const [selectedProducto, setSelectedProducto] = useState(producto || ''); // Asigna el valor del producto al state
+  const [selectedProducto, setSelectedProducto] = useState(id); // Asigna el valor del producto al state
 
   const [nombre, setNombre] = useState('');
   const [carnetBase64, setCarnetBase64] = useState('');
@@ -23,6 +24,10 @@ const RegistroSolicitud = ({ route }) => {
   const [tokenPush, setTokenPush] = useState("");
   const [ingresos, setIngresos] = useState('');
   const [egresos, setEgresos] = useState('');
+
+  //PRODUCTOS ------------------------------------------------
+  
+  //PRODUCTOS ------------------------------------------------
 
   const takePhoto = async (setImage) => {
     const options = {
@@ -88,13 +93,11 @@ const RegistroSolicitud = ({ route }) => {
   };
 
   useEffect(() => {
-    
-
     // Cuando el componente se monta, asegura que el picker se haya seleccionado
-    if (producto) {
-      setSelectedProducto(producto);
+    if (id) {
+      //setSelectedProducto(id); //No se va usar
     }
-  }, [producto]);
+  }, [selectedProducto]);
 
   useEffect(() => {
     //Obtener token push desde el async storage
@@ -121,11 +124,12 @@ const RegistroSolicitud = ({ route }) => {
               selectedValue={selectedProducto}
               onValueChange={(itemValue) => setSelectedProducto(itemValue)}
               style={styles.picker}
+              enabled={false}
             >
               <Picker.Item label="Seleccione un producto" value="" />
-              <Picker.Item label="Apertura de cuenta" value="Apertura de cuenta" />
-              <Picker.Item label="Crédito personal" value="Crédito personal" />
-              <Picker.Item label="Tarjetas" value="Tarjetas" />
+              {
+                listado.riesgo_global.map((item) => (<Picker.Item label={item.title} value={item.id} key={item.id} />))
+              }
             </Picker>
           </View>
         </View>
@@ -185,6 +189,7 @@ const RegistroSolicitud = ({ route }) => {
             value={tokenPush}
             onChangeText={setTokenPush}
             style={styles.input}
+            editable={false}
           />
         </View>
 
