@@ -29,6 +29,14 @@
       "eas": {
         "projectId": "54090f7d-123b-4769-817c-dfc78bbc48ec"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ]
   }
 }
