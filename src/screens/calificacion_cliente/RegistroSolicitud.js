@@ -22,12 +22,15 @@ const RegistroSolicitud = ({ route }) => {
   const [estado, setEstado] = useState('SOLICITADO');
   const [direccion, setDireccion] = useState('');
   const [tokenPush, setTokenPush] = useState("");
-  const [ingresos, setIngresos] = useState('');
-  const [egresos, setEgresos] = useState('');
 
-  //PRODUCTOS ------------------------------------------------
-  
-  //PRODUCTOS ------------------------------------------------
+  //DATOS FINANCIEROS ------------------------------------------------
+  const [ingresos, setIngresos] = useState(0);
+  const [egresos, setEgresos] = useState(0);
+  //DATOS FINANCIEROS ------------------------------------------------
+
+  //CALCULADO --------------------------------------------------------
+  const [calculado, setCalculado] = useState(false);
+  //CALCULADO --------------------------------------------------------
 
   const takePhoto = async (setImage) => {
     const options = {
@@ -87,9 +90,9 @@ const RegistroSolicitud = ({ route }) => {
     setSelfieBase64('');
     setTelefono('');
     setDireccion('');
-    setTokenPush('');
-    setIngresos('');
-    setEgresos('');
+    //setTokenPush('');
+    //setIngresos('');
+    //setEgresos('');
   };
 
   useEffect(() => {
@@ -109,8 +112,38 @@ const RegistroSolicitud = ({ route }) => {
       }
     };
 
+    //Obtener ingresos y egresos desde el async storage ------------------------------------------------
+    const getDatosFinancieros = async () => {
+      const ingresosStorage = await AsyncStorage.getItem('ingresos');
+      const egresosStorage = await AsyncStorage.getItem('egresos');
+
+      if (ingresosStorage && egresosStorage) {
+          const auxIng = JSON.parse(ingresosStorage);
+          const auxEgr = JSON.parse(egresosStorage);
+          const sumaIng = (!isNaN(auxIng.monto) ? parseFloat(auxIng.monto) : 0);
+          const sumaEgr = (!isNaN(auxEgr.alquiler) ? parseFloat(auxEgr.alquiler) : 0) 
+          + (!isNaN(auxEgr.canastaBasica) ? parseFloat(auxEgr.canastaBasica) : 0) 
+          + (!isNaN(auxEgr.financiaciones) ? parseFloat(auxEgr.financiaciones) : 0)
+          + (!isNaN(auxEgr.transporte) ? parseFloat(auxEgr.transporte) : 0) 
+          + (!isNaN(auxEgr.serviciosPublicos) ? parseFloat(auxEgr.serviciosPublicos) : 0) 
+          + (!isNaN(auxEgr.saludSeguro) ? parseFloat(auxEgr.saludSeguro) : 0)
+          + (!isNaN(auxEgr.egresosVarios) ? parseFloat(auxEgr.egresosVarios) : 0);
+          
+          setIngresos(sumaIng);
+          setEgresos(sumaEgr);
+      }
+    };
+
+    getDatosFinancieros();
+    //Obtener ingresos y egresos desde el async storage ------------------------------------------------
+
     getPushToken();
-  })
+  }, [calculado])
+
+  const handleCalcular = () => {
+    setCalculado(!calculado);
+    Alert.alert('Calificación', 'Se ha calculado tu calificación exitosamente');
+  }
 
   return (
     <ScrollView style={styles.scrollContainer}>
@@ -195,27 +228,21 @@ const RegistroSolicitud = ({ route }) => {
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Ingresos:</Text>
-          <TextInput
-            placeholder="Ingrese sus ingresos"
-            value={ingresos}
-            onChangeText={setIngresos}
-            style={styles.input}
-          />
+          <Text style={styles.input}>$ {ingresos}</Text>
         </View>
 
         <View style={styles.formGroup}>
           <Text style={styles.label}>Egresos:</Text>
-          <TextInput
-            placeholder="Ingrese sus egresos"
-            value={egresos}
-            onChangeText={setEgresos}
-            style={styles.input}
-          />
+          <Text style={styles.input}>$ {egresos}</Text>
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Enviar Solicitud</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style = {styles.button} onPress={() => handleCalcular()}>
+                    <Text style = {styles.buttonText}>Recalcular</Text>
+                </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -268,6 +295,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     alignItems: 'center',
+    marginBottom: 20,
   },
   buttonText: {
     color: '#fff',
